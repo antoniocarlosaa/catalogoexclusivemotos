@@ -1,0 +1,7 @@
+{
+  "name": "Alfa Motos - Catálogo v2.0",
+  "description": "A vehicle catalog for motorcycles and cars with a sleek aesthetic and local media upload capabilities.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
