@@ -35,7 +35,6 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
   return (
     <div
       className={`relative rounded-2xl overflow-hidden group transition-all duration-500 h-full bg-[#121212] border border-white/5 hover:border-gold/30 flex flex-col ${vehicle.isSold ? 'opacity-80' : ''}`}
-      style={{ border: '5px solid red', zIndex: 9999 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { setIsHovered(false); setZoomStyle({ transformOrigin: 'center center', scale: '1' }); }}
@@ -122,7 +121,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
             className="py-2.5 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg hover:brightness-110"
             style={{ backgroundColor: '#25D366', boxShadow: '0 10px 15px -3px rgba(37, 211, 102, 0.2)' }}
           >
-            WhatsApp
+            WhatsApp Agora
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); if (onClick) onClick(); }}
