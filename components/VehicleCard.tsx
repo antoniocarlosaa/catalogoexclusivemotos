@@ -115,16 +115,18 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
         </div>
 
         {/* Action Buttons - Always Visible now */}
-        <div className="grid grid-cols-2 gap-3 mt-auto">
+        <div className="grid grid-cols-2 gap-3 mt-auto" style={{ gap: '0.75rem' }}>
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-900/20"
+            className="py-2.5 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg hover:brightness-110"
+            style={{ backgroundColor: '#25D366', boxShadow: '0 10px 15px -3px rgba(37, 211, 102, 0.2)' }}
           >
             WhatsApp
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); if (onClick) onClick(); }}
-            className="py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20"
+            className="py-2.5 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg hover:brightness-110"
+            style={{ backgroundColor: '#FF6B00', boxShadow: '0 10px 15px -3px rgba(255, 107, 0, 0.2)' }}
           >
             Detalhes
           </button>
