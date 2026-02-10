@@ -59,7 +59,7 @@ const StockCarousel: React.FC<StockCarouselProps> = ({ title, vehicles, onIntere
 
       <div className="relative -mx-4 px-4 overflow-hidden group/carousel">
         <div ref={carouselRef} className="flex gap-4 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar">
-          {vehicles.map((vehicle) => (
+          {vehicles.map((vehicle, index) => (
             <div key={vehicle.id} className={`${cardWidthClass} snap-center`}>
               <div className="h-full transform transition-transform hover:-translate-y-1 duration-300">
                 <VehicleCard
@@ -68,6 +68,7 @@ const StockCarousel: React.FC<StockCarouselProps> = ({ title, vehicles, onIntere
                   onClick={() => onViewDetails(vehicle)}
                   imageFit={imageFit}
                   variant={variant}
+                  priority={index < 4} // Load first 4 eagerly
                 />
               </div>
             </div>

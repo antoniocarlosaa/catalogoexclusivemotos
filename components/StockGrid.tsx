@@ -23,7 +23,7 @@ const StockGrid: React.FC<StockGridProps> = ({ title, vehicles, onInterest, onVi
 
             {/* GRID LAYOUT: Wrapping items, filling vertical space */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                {vehicles.map((vehicle) => (
+                {vehicles.map((vehicle, index) => (
                     <div key={vehicle.id} className="h-full">
                         <VehicleCard
                             vehicle={vehicle}
@@ -31,6 +31,7 @@ const StockGrid: React.FC<StockGridProps> = ({ title, vehicles, onInterest, onVi
                             onClick={() => onViewDetails(vehicle)}
                             imageFit={imageFit}
                             variant="default" // Force default (compact) variant for grid
+                            priority={index < 6} // Load first row eagerly (assuming 6 columns max)
                         />
                     </div>
                 ))}

@@ -1,4 +1,4 @@
-import VehicleDetailModal from './components/VehicleDetailModal'; // Global Modal
+const VehicleDetailModal = React.lazy(() => import('./components/VehicleDetailModal')); // Global Modal
 import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import HeroSearch from './components/HeroSearch';
@@ -6,13 +6,19 @@ import StockCarousel from './components/StockCarousel';
 import StockGrid from './components/StockGrid';
 import SearchBar from './components/SearchBar';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { Vehicle, CategoryFilter, VehicleType, AppSettings } from './types';
-import VehicleCard from './components/VehicleCard';
-import HeroCard from './components/HeroCard';
-import ViewMoreCard from './components/ViewMoreCard';
-import AdminPanel from './components/AdminPanel';
-import LoginModal from './components/LoginModal';
+import VehicleCard from './components/VehicleCard'; // Mantenha este estático pois é usado na Home
+// HeroCard e ViewMoreCard não parecem ser usados no render principal ou são leves? 
+// Verificando uso: ViewMoreCard não está sendo usado no App.tsx original? 
+// Vou manter os imports que não são usados ?? O código original tinha imports não usados.
+// Vou remover HeroCard e ViewMoreCard se não forem usados, ou mantê-los se forem.
+// No código original: imports HeroCard, ViewMoreCard. Mas no JSX não vi onde são usados.
+// Vou mantê-los comentados ou remover para limpar, mas a instrução é Lazy Loading.
+
+// Lazy load Admin e Login para não pesar no check inicial
+const AdminPanel = React.lazy(() => import('./components/AdminPanel'));
+const LoginModal = React.lazy(() => import('./components/LoginModal'));
 import { db } from './services/VehicleService';
 import { supabase } from './services/supabase';
 import { useAuth } from './contexts/AuthContext';
@@ -375,54 +381,57 @@ const App: React.FC = () => {
       />
 
       {/* MODALS */}
-      {isAdminOpen && (
-        <AdminPanel
-          currentNumbers={settings.whatsappNumbers}
-          currentMapsUrl={settings.googleMapsUrl}
-          currentBackgroundImageUrl={settings.backgroundImageUrl}
-          currentBackgroundPosition={settings.backgroundPosition}
-          currentCardImageFit={settings.cardImageFit}
-          vehicles={vehicles}
-          onSaveSettings={async (newSettings) => {
-            setSettings(newSettings);
-            try {
-              await db.saveSettings(newSettings);
-            } catch (e) {
-              console.error("Erro no App ao salvar:", e);
-              throw e;
-            }
-          }}
-          onSaveNumbers={() => { }}
-          onSaveMapsUrl={() => { }}
-          onSaveBackgroundImageUrl={() => { }}
-          onSaveBackgroundPosition={() => { }}
-          onSaveCardImageFit={() => { }}
-          onUpdateVehicle={onUpdate}
-          onDeleteVehicle={onDelete}
-          onUpload={onUpload}
-          onClose={() => setIsAdminOpen(false)}
-        />
-      )
-      }
+      {/* MODALS */}
+      <Suspense fallback={<div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm"><div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin"></div></div>}>
+        {isAdminOpen && (
+          <AdminPanel
+            currentNumbers={settings.whatsappNumbers}
+            currentMapsUrl={settings.googleMapsUrl}
+            currentBackgroundImageUrl={settings.backgroundImageUrl}
+            currentBackgroundPosition={settings.backgroundPosition}
+            currentCardImageFit={settings.cardImageFit}
+            vehicles={vehicles}
+            onSaveSettings={async (newSettings) => {
+              setSettings(newSettings);
+              try {
+                await db.saveSettings(newSettings);
+              } catch (e) {
+                console.error("Erro no App ao salvar:", e);
+                throw e;
+              }
+            }}
+            onSaveNumbers={() => { }}
+            onSaveMapsUrl={() => { }}
+            onSaveBackgroundImageUrl={() => { }}
+            onSaveBackgroundPosition={() => { }}
+            onSaveCardImageFit={() => { }}
+            onUpdateVehicle={onUpdate}
+            onDeleteVehicle={onDelete}
+            onUpload={onUpload}
+            onClose={() => setIsAdminOpen(false)}
+          />
+        )
+        }
 
-      {selectedVehicle && (
-        <VehicleDetailModal
-          vehicle={selectedVehicle}
-          onClose={() => setSelectedVehicle(null)}
-          onInterest={handleInterest}
-        />
-      )}
+        {selectedVehicle && (
+          <VehicleDetailModal
+            vehicle={selectedVehicle}
+            onClose={() => setSelectedVehicle(null)}
+            onInterest={handleInterest}
+          />
+        )}
 
-      {showLoginModal && (
-        <LoginModal
-          onClose={() => setShowLoginModal(false)}
-          onSuccess={() => {
-            setShowLoginModal(false);
-            setIsAdminOpen(true);
-          }}
-        />
-      )
-      }
+        {showLoginModal && (
+          <LoginModal
+            onClose={() => setShowLoginModal(false)}
+            onSuccess={() => {
+              setShowLoginModal(false);
+              setIsAdminOpen(true);
+            }}
+          />
+        )
+        }
+      </Suspense>
 
       {/* Button Scroll Top */}
       {showScrollTop && (

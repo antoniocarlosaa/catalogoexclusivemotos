@@ -2,15 +2,18 @@
 import React, { useState } from 'react';
 import { Vehicle, VehicleType } from '../types';
 
+import { getOptimizedImageUrl } from '../src/utils/imageUtils';
+
 interface VehicleCardProps {
   vehicle: Vehicle;
   onInterest: (vehicle: Vehicle) => void;
   onClick?: () => void;
   variant?: 'default' | 'promo' | 'featured' | 'hero';
   imageFit?: 'cover' | 'contain';
+  priority?: boolean; // NEW: Priority loading for LCP
 }
 
-const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick, variant = 'default', imageFit = 'cover' }) => {
+const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick, variant = 'default', imageFit = 'cover', priority = false }) => {
   const [zoomStyle, setZoomStyle] = useState({ transformOrigin: 'center center', scale: '1' });
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -49,7 +52,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
           <video src={vehicle.videoUrl} className="w-full h-full object-cover" autoPlay muted loop playsInline />
         ) : (
           <img
-            src={vehicle.imageUrl}
+            src={getOptimizedImageUrl(vehicle.imageUrl, 500)}
             onError={() => setImageError(true)}
             className={`w-full h-full object-cover transition-transform duration-700 ease-out`}
             style={{
@@ -58,7 +61,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
               willChange: 'transform',
               objectPosition: vehicle.imagePosition || '50% 50%'
             }}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            decoding={priority ? "sync" : "async"}
+            // @ts-ignore
+            fetchPriority={priority ? "high" : "auto"}
             alt={vehicle.name}
           />
         )}
