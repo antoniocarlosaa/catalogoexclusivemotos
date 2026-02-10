@@ -115,16 +115,16 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
         </div>
 
         {/* Action Buttons - Always Visible now */}
-        <div className="grid grid-cols-2 gap-2 mt-auto">
+        <div className="grid grid-cols-2 gap-3 mt-auto">
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="py-2.5 bg-white/5 hover:bg-[#25D366] hover:text-white text-white/70 rounded-lg font-bold text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 border border-white/5 hover:border-transparent"
+            className="py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-900/20"
           >
             WhatsApp
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); if (onClick) onClick(); }}
-            className="py-2.5 bg-transparent hover:bg-white/10 text-white/50 hover:text-white rounded-lg font-bold text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 border border-white/10 hover:border-white/20"
+            className="py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-lg shadow-orange-900/20"
           >
             Detalhes
           </button>
