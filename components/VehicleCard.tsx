@@ -117,19 +117,15 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
           </div>
         </div>
 
-        {/* Action Buttons - Redesigned */}
+        {/* Action Buttons - Refined & Clean */}
         <div className="flex gap-2 mt-auto">
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="group/btn relative overflow-hidden flex-1 py-2.5 px-2 rounded-lg font-bold text-[10px] uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-lg hover:shadow-green-500/20 active:scale-95"
-            style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Tailwind emerald-500 to emerald-600
-              color: 'white'
-            }}
+            className="group/btn flex-1 py-2.5 px-2 rounded-lg font-bold text-[10px] uppercase tracking-wide transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 text-white"
+            style={{ backgroundColor: '#25D366' }} // Flat WhatsApp Green - Cleaner Look
           >
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
             <span className="material-symbols-outlined text-[18px]">whatsapp</span>
-            <span className="truncate">Tenho Interesse</span>
+            <span>WhatsApp</span>
           </button>
 
           <button
