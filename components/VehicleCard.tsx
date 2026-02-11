@@ -121,10 +121,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
         <div className="flex gap-2 mt-auto">
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="group/btn flex-1 py-2.5 px-2 rounded-lg font-bold text-[10px] uppercase tracking-wide transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 text-white"
+            className="group/btn flex-1 py-2 px-2 rounded-lg font-semibold text-[9px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 text-white"
             style={{ backgroundColor: '#25D366' }} // Flat WhatsApp Green - Cleaner Look
           >
-            <span className="material-symbols-outlined text-[18px]">whatsapp</span>
+            <span className="material-symbols-outlined text-[16px]">whatsapp</span>
             <span>WhatsApp</span>
           </button>
 
