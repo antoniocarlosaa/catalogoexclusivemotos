@@ -118,26 +118,26 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
         </div>
 
         {/* Action Buttons - Redesigned */}
-        <div className="grid grid-cols-[1.2fr,0.8fr] gap-2 mt-auto">
+        <div className="flex gap-2 mt-auto">
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="group/btn relative overflow-hidden py-2.5 px-1 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-lg hover:shadow-green-500/20 active:scale-95"
+            className="group/btn relative overflow-hidden flex-1 py-2.5 px-2 rounded-lg font-bold text-[10px] uppercase tracking-wide transition-all flex items-center justify-center gap-1.5 shadow-lg hover:shadow-green-500/20 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', // Tailwind emerald-500 to emerald-600
               color: 'white'
             }}
           >
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
-            <span className="material-symbols-outlined text-[16px]">chat</span>
+            <span className="material-symbols-outlined text-[18px]">whatsapp</span>
             <span className="truncate">Tenho Interesse</span>
           </button>
 
           <button
             onClick={(e) => { e.stopPropagation(); if (onClick) onClick(); }}
-            className="group/btn relative overflow-hidden py-2.5 px-1 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 border border-white/10 hover:border-gold/50 hover:bg-gold/10 text-white/80 hover:text-gold active:scale-95"
+            className="group/btn relative overflow-hidden w-10 flex-none rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all flex items-center justify-center border border-white/10 hover:border-gold/50 hover:bg-gold/10 text-white/80 hover:text-gold active:scale-95"
+            title="Ver Detalhes"
           >
-            <span className="material-symbols-outlined text-[16px]">add_circle</span>
-            <span className="truncate">Detalhes</span>
+            <span className="material-symbols-outlined text-[20px]">add</span>
           </button>
         </div>
       </div>
