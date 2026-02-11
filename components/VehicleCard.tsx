@@ -34,7 +34,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
 
   return (
     <div
-      className={`relative rounded-2xl overflow-hidden group transition-all duration-500 h-full bg-[#121212] border border-white/5 hover:border-gold/30 flex flex-col ${vehicle.isSold ? 'opacity-80' : ''}`}
+      className={`relative rounded-2xl overflow-hidden group transition-all duration-500 h-full bg-[#121212] border-4 border-red-600 hover:border-gold/30 flex flex-col ${vehicle.isSold ? 'opacity-80' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { setIsHovered(false); setZoomStyle({ transformOrigin: 'center center', scale: '1' }); }}
