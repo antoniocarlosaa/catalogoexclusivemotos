@@ -222,6 +222,34 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
 
   // Função auxiliar para upload seguro
   const uploadFileToStorage = async (file: File): Promise<string> => {
+    // Se for imagem e existir a chave do ImgBB, envia via ImgBB
+    const imgbbKey = import.meta.env.VITE_IMGBB_API_KEY;
+    if (file.type.startsWith('image/') && imgbbKey) {
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, {
+            method: 'POST',
+            body: formData,
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            return data.data.url;
+        } else {
+            console.error("Erro interno ImgBB:", data);
+            throw new Error(data.error?.message || 'Erro desconhecido no ImgBB');
+        }
+      } catch (error) {
+        console.warn("Falha no upload para o ImgBB, tentando fallback Supabase caso possível...", error);
+        // Pode prosseguir para o fallback do supabase ou lançar o erro. 
+        // Vamos lançar o erro para evitar estourar a cota do Supabase desnecessariamente.
+        throw error;
+      }
+    }
+
+    // Fallback: Supabase Storage (para vídeos ou se a chave não estiver configurada)
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
     const filePath = `${fileName}`;
@@ -245,7 +273,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({
 
         return data.publicUrl;
       } catch (error) {
-        console.warn(`Tentativa de upload ${attempts + 1}/${maxAttempts} falhou:`, error);
+        console.warn(`Tentativa de upload ${attempts + 1}/${maxAttempts} falhou no Supabase:`, error);
         attempts++;
         if (attempts === maxAttempts) throw error;
         // Wait 1 second before retrying

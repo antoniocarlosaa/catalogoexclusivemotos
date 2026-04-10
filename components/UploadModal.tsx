@@ -54,6 +54,31 @@ const UploadModal: React.FC<UploadModalProps> = ({ onClose, onUpload }) => {
   };
 
   const uploadFile = async (file: File, folder: string): Promise<string> => {
+    const imgbbKey = import.meta.env.VITE_IMGBB_API_KEY;
+
+    if (file.type.startsWith('image/') && imgbbKey) {
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbKey}`, {
+                method: 'POST',
+                body: formData,
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                return data.data.url;
+            } else {
+                throw new Error(data.error?.message || 'Erro desconhecido no ImgBB');
+            }
+        } catch (error) {
+            console.warn("Falha no upload para o ImgBB, cancelando...", error);
+            throw error;
+        }
+    }
+
+    // Fallback: Supabase Storage
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
     const filePath = `${fileName}`;
