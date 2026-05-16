@@ -1,7 +1,5 @@
-
 import React, { useState } from 'react';
 import { Vehicle, VehicleType } from '../types';
-
 import { getOptimizedImageUrl } from '../src/utils/imageUtils';
 
 interface VehicleCardProps {
@@ -10,7 +8,7 @@ interface VehicleCardProps {
   onClick?: () => void;
   variant?: 'default' | 'promo' | 'featured' | 'hero';
   imageFit?: 'cover' | 'contain';
-  priority?: boolean; // NEW: Priority loading for LCP
+  priority?: boolean;
 }
 
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick, variant = 'default', imageFit = 'cover', priority = false }) => {
@@ -18,23 +16,18 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Dynamic Styles based on Variant
-  const isFeatured = variant === 'featured' || variant === 'promo';
-  const aspectRatio = isFeatured ? 'aspect-[16/9]' : 'aspect-[4/3]';
-  const cardPadding = isFeatured ? 'p-0' : 'p-3';
-
   // Mouse Move for Zoom Effect
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (vehicle.videoUrl || vehicle.isSold || imageError) return;
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
     const y = ((e.clientY - top) / height) * 100;
-    setZoomStyle({ transformOrigin: `${x}% ${y}%`, scale: '1.5' });
+    setZoomStyle({ transformOrigin: `${x}% ${y}%`, scale: '1.4' });
   };
 
   return (
     <div
-      className={`relative rounded-xl overflow-hidden group transition-all duration-300 h-full bg-[#121212] border border-white/5 hover:border-gold/30 hover:shadow-2xl hover:shadow-gold/5 flex flex-col ${vehicle.isSold ? 'opacity-80' : ''}`}
+      className={`relative rounded-2xl overflow-hidden group transition-all duration-500 h-full bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border border-white/5 hover:border-gold/40 hover:shadow-[0_15px_40px_-10px_rgba(255,107,0,0.4)] hover:-translate-y-[6px] flex flex-col ${vehicle.isSold ? 'opacity-80' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { setIsHovered(false); setZoomStyle({ transformOrigin: 'center center', scale: '1' }); }}
@@ -54,7 +47,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
           <img
             src={getOptimizedImageUrl(vehicle.imageUrl, 500)}
             onError={() => setImageError(true)}
-            className={`w-full h-full object-cover transition-transform duration-700 ease-out`}
+            className={`w-full h-full object-cover transition-transform duration-[800ms] ease-out group-hover:scale-110`}
             style={{
               transformOrigin: zoomStyle.transformOrigin,
               transform: `scale(${zoomStyle.scale})`,
@@ -69,75 +62,79 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onInterest, onClick,
           />
         )}
 
-        {/* TOP BADGES */}
-        <div className="absolute top-2 left-2 flex flex-wrap gap-1 z-20 pointer-events-none">
-          {vehicle.isFeatured && <span className="px-2 py-0.5 bg-gold text-black text-[8px] font-bold uppercase tracking-widest rounded shadow-lg backdrop-blur-md">Destaque</span>}
-          {(vehicle.isPromoSemana || vehicle.isPromoMes) && <span className="px-2 py-0.5 bg-red-600/90 text-white text-[8px] font-bold uppercase tracking-widest rounded shadow-lg backdrop-blur-md">Promo</span>}
-          {vehicle.isZeroKm && <span className="px-2 py-0.5 bg-blue-500/90 text-white text-[8px] font-bold uppercase tracking-widest rounded shadow-lg backdrop-blur-md">0 KM</span>}
-          {vehicle.isRepasse && <span className="px-2 py-0.5 bg-white/90 text-black text-[8px] font-bold uppercase tracking-widest rounded shadow-lg backdrop-blur-md">Repasse</span>}
+        {/* Premium Gradient Overlay on Image */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
+
+        {/* TOP BADGES - Smart Tags */}
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-20 pointer-events-none">
+          {vehicle.isFeatured && <span className="px-2.5 py-1 bg-gold/90 text-black text-[9px] font-bold uppercase tracking-widest rounded-md shadow-lg backdrop-blur-md flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">local_fire_department</span> Destaque</span>}
+          {(vehicle.isPromoSemana || vehicle.isPromoMes) && <span className="px-2.5 py-1 bg-white/10 border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-md shadow-lg backdrop-blur-md flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">rocket_launch</span> Alta Procura</span>}
+          {vehicle.isZeroKm && <span className="px-2.5 py-1 bg-blue-500/90 text-white text-[9px] font-bold uppercase tracking-widest rounded-md shadow-lg backdrop-blur-md flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">new_releases</span> 0 KM</span>}
+          {vehicle.isRepasse && <span className="px-2.5 py-1 bg-emerald-500/90 text-white text-[9px] font-bold uppercase tracking-widest rounded-md shadow-lg backdrop-blur-md flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">bolt</span> Chegou Hoje</span>}
+          {!vehicle.isFeatured && !vehicle.isPromoSemana && !vehicle.isPromoMes && !vehicle.isZeroKm && !vehicle.isRepasse && <span className="px-2.5 py-1 bg-black/40 border border-white/10 text-white/90 text-[9px] font-bold uppercase tracking-widest rounded-md shadow-lg backdrop-blur-md flex items-center gap-1"><span className="material-symbols-outlined text-[10px]">diamond</span> Selecionado</span>}
         </div>
 
         {/* Sold Overlay */}
         {vehicle.isSold && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 pointer-events-none">
-            <span className="px-4 py-1 border border-white/20 text-white text-[10px] font-bold uppercase tracking-[0.2em] rounded bg-red-600/50 backdrop-blur-sm">Vendido</span>
+          <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-30 pointer-events-none backdrop-blur-[2px]">
+            <span className="px-6 py-2 border-2 border-white/20 text-white text-xs font-bold uppercase tracking-[0.3em] rounded-lg bg-red-600/50 backdrop-blur-md rotate-[-15deg] shadow-2xl">Vendido</span>
           </div>
         )}
       </div>
 
       {/* CONTENT SECTION - BOTTOM */}
-      <div className="flex-1 p-4 flex flex-col relative">
-        {/* Decorative gradient line */}
-        <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
+      <div className="flex-1 p-5 flex flex-col relative z-20 bg-gradient-to-b from-transparent to-black/50">
+        
         {/* Name & Title */}
-        <div className="mb-2 pt-2">
-          <h3 className="text-sm font-heading text-white uppercase leading-tight line-clamp-2 h-10 flex items-center tracking-wide group-hover:text-gold transition-colors duration-300">
+        <div className="mb-1 pt-1">
+          <h3 className="text-[15px] font-heading text-white uppercase leading-snug line-clamp-2 h-11 flex items-start tracking-wide group-hover:text-gold transition-colors duration-300">
             {vehicle.name}
           </h3>
         </div>
 
-        {/* Price */}
-        <div className="mb-4">
-          <p className="text-gold font-bold text-lg tracking-tight drop-shadow-sm">
+        {/* Price & Emotional Tag */}
+        <div className="mb-5 flex flex-col items-start gap-1">
+          <p className="text-gold font-bold text-xl tracking-tight drop-shadow-sm flex items-center gap-2">
             {typeof vehicle.price === 'number' ? `R$ ${vehicle.price.toLocaleString('pt-BR')}` : vehicle.price}
           </p>
+          {!vehicle.isSold && (
+            <span className="text-[9px] font-bold uppercase tracking-widest text-gold bg-gold/10 px-2 py-0.5 rounded border border-gold/20 shadow-[0_0_10px_rgba(255,107,0,0.1)]">
+              {['⚡ Mais vistos hoje', '🔥 Procurada esta semana', '🚨 Pode sair do estoque'][ (vehicle.name.length + (Number(vehicle.price) || 0)) % 3 ]}
+            </span>
+          )}
         </div>
 
         {/* Specs: Year & KM */}
-        <div className="flex items-center justify-between text-[10px] text-white/40 font-bold uppercase tracking-wider mb-5 bg-white/5 rounded-lg px-2 py-1.5 border border-white/5">
-          <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[14px]">calendar_today</span>
+        <div className="flex items-center justify-between text-[10px] text-white/50 font-bold uppercase tracking-wider mb-6 bg-white/5 rounded-xl px-3 py-2 border border-white/5 backdrop-blur-sm shadow-inner group-hover:bg-white/10 transition-colors">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px] text-white/40">calendar_today</span>
             <span>{vehicle.year || '-'}</span>
           </div>
-          <div className="w-px h-3 bg-white/10"></div>
-          <div className="flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-[14px]">speed</span>
+          <div className="w-px h-4 bg-white/10"></div>
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-[16px] text-white/40">speed</span>
             <span>{vehicle.km === undefined ? '-' : vehicle.km <= 0 ? '0 KM' : vehicle.km <= 10 ? 'Semi Nova' : `${vehicle.km.toLocaleString('pt-BR')} KM`}</span>
           </div>
         </div>
 
         {/* Action Buttons - Stacked Vertical */}
-        <div className="flex flex-col gap-2 mt-auto">
+        <div className="flex flex-col gap-3 mt-auto">
           {/* Details Button - Top */}
           <button
             onClick={(e) => { e.stopPropagation(); if (onClick) onClick(); }}
-            className="w-full py-1.5 rounded-lg font-bold text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 text-white/60 hover:text-white hover:bg-white/5 border border-transparent hover:border-white/10"
+            className="w-full py-2.5 rounded-xl font-bold text-[11px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 text-white/90 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/30"
           >
-            <span className="material-symbols-outlined text-[16px]">add_circle</span>
+            <span className="material-symbols-outlined text-[18px]">visibility</span>
             <span>Ver Detalhes</span>
           </button>
 
           {/* WhatsApp Button - Bottom (Primary) */}
           <button
             onClick={(e) => { e.stopPropagation(); onInterest(vehicle); }}
-            className="w-full py-2.5 rounded-lg font-semibold text-[10px] uppercase tracking-tight transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-green-500/20 active:scale-95 text-white"
-            style={{ backgroundColor: '#25D366' }}
+            className="w-full py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 bg-[#111] text-white border border-gold/30 hover:bg-[#25D366] hover:border-[#25D366] hover:text-white shadow-lg hover:shadow-[0_4px_25px_rgba(37,211,102,0.4)] group/btn"
           >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-            </svg>
-            <span className="truncate">Tenho Interesse</span>
+            <span className="material-symbols-outlined text-[20px] text-[#25D366] group-hover/btn:text-white transition-colors duration-300">chat</span>
+            <span className="truncate">Conversar agora</span>
           </button>
         </div>
       </div>

@@ -9,14 +9,17 @@ interface SidebarProps {
     visitCount: number;
     isOpen: boolean;           // NEW: Control visibility on mobile
     onClose: () => void;       // NEW: Close sidebar on mobile
+    motosCount?: number;
+    carrosCount?: number;
+    promocoesCount?: number;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ filter, setFilter, onAdminClick, visitCount, isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ filter, setFilter, onAdminClick, visitCount, isOpen, onClose, motosCount, carrosCount, promocoesCount }) => {
     const navItems: { label: string; icon: string; value: CategoryFilter }[] = [
         { label: 'Visão Geral', icon: 'dashboard', value: 'TUDO' },
-        { label: 'Motos', icon: 'two_wheeler', value: 'MOTOS' },
-        { label: 'Carros', icon: 'directions_car', value: 'CARROS' },
-        { label: 'Promoções', icon: 'local_offer', value: 'PROMOÇÕES' },
+        { label: `Motos (${motosCount || 0})`, icon: 'two_wheeler', value: 'MOTOS' },
+        { label: `Carros (${carrosCount || 0})`, icon: 'directions_car', value: 'CARROS' },
+        { label: `Promoções (${promocoesCount || 0})`, icon: 'local_offer', value: 'PROMOÇÕES' },
     ];
 
     return (
@@ -94,9 +97,9 @@ const Sidebar: React.FC<SidebarProps> = ({ filter, setFilter, onAdminClick, visi
 
                     {/* Status / Copyright */}
                     <div className="px-2 pt-2">
-                        <div className="flex items-center gap-2 text-white/20 text-[10px] font-bold uppercase tracking-widest mb-2">
-                            <span className="w-2 h-2 rounded-full bg-green-500 shadow-lg shadow-green-500/50"></span>
-                            <span>Sistema Online</span>
+                        <div className="flex items-center gap-2 text-white/50 text-[10px] font-bold uppercase tracking-widest mb-2">
+                            <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)] animate-pulse"></span>
+                            <span>Estoque atualizado agora</span>
                         </div>
 
                         <div className="flex items-center gap-2 text-white/20 text-[10px] font-bold uppercase tracking-widest">

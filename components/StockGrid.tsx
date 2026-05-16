@@ -22,7 +22,7 @@ const StockGrid: React.FC<StockGridProps> = ({ title, vehicles, onInterest, onVi
             </div>
 
             {/* GRID LAYOUT: Wrapping items, filling vertical space */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {vehicles.map((vehicle, index) => (
                     <div key={vehicle.id} className="h-full">
                         <VehicleCard
